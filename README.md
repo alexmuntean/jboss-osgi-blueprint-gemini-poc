@@ -13,7 +13,7 @@ To install Gemini Blueprint to JBoss, you'll need
 - install the above
 - get the actual [gemini files](http://www.eclipse.org/gemini/blueprint/download/)
 - install gemini-blueprint-io
-- install gemini-core
+- install gemini-blueprint-core
  
 Then you'd be good to go.
 
