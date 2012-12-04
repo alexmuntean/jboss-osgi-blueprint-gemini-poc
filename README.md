@@ -17,8 +17,7 @@ To install Gemini Blueprint to JBoss, you'll need
  
 Then you'd be good to go.
 
-Also note that Gemini Blueprint is not interoperable with other Blueprint implementations right now due to it [not exporting org.osgi.service.blueprint]
-(https://bugs.eclipse.org/bugs/show_bug.cgi?id=351755).
+Note that Gemini Blueprint is not directly interchangeable with other Blueprint implementations right now due to it [not exporting org.osgi.service.blueprint](https://bugs.eclipse.org/bugs/show_bug.cgi?id=351755) yet.
 
 Scope of these tests would be
 
