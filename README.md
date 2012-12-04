@@ -11,7 +11,7 @@ To install Gemini Blueprint to JBoss, you'll need
 - get [spring-beans](http://ebr.springsource.com/repository/app/bundle/version/detail?name=org.springframework.beans&version=3.1.3.RELEASE)
 - get [spring-context](http://ebr.springsource.com/repository/app/bundle/version/detail?name=org.springframework.context&version=3.1.3.RELEASE)
 - install the above
-- get the actual gemini files at http://www.eclipse.org/gemini/blueprint/download/
+- get the actual [gemini files](http://www.eclipse.org/gemini/blueprint/download/)
 - install gemini-blueprint-io
 - install gemini-core
  
