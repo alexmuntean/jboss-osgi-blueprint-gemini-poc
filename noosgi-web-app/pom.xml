@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
+  <artifactId>web-app-no-osgi</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>poc: regular web app</name>
+  <description>poc: regular web app</description>
+  <parent>
+    <groupId>fi.eis.applications.jboss.poc.gemini.parent</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.0.1</version>
+  </parent>
+
+  <dependencies>
+
+      <!-- Import the Common Annotations API (JSR-250), we use provided scope
+         as the API is included in JBoss AS 7 -->
+      <dependency>
+         <groupId>org.jboss.spec.javax.annotation</groupId>
+         <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- Import the Servlet API, we use provided scope as the API is included
+         in JBoss AS 7 -->
+      <dependency>
+         <groupId>org.jboss.spec.javax.servlet</groupId>
+         <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- OSGi specifics -->
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <scope>provided</scope>
+      </dependency>
+      <!-- our client interfaces -->
+      <dependency>
+        <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
+        <artifactId>osgi-simple-service-api</artifactId>
+        <scope>provided</scope>
+      </dependency>
+	  <!--
+      <dependency>
+        <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
+        <artifactId>ejb-no-osgi</artifactId>
+        <scope>provided</scope>
+      </dependency>
+	  -->
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+        <scope>provided</scope>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <!-- Set the name of the war, used as the context root when the app
+         is deployed -->
+      <finalName>jboss-poc-webapp</finalName>
+      <plugins>
+         <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>${version.war.plugin}</version>
+            <configuration>
+               <!-- Java EE 6 doesn't require web.xml, Maven needs to catch
+                  up! -->
+            <failOnMissingWebXml>false</failOnMissingWebXml>
+            <archive>
+              <manifestEntries>
+                <Dependencies>org.osgi.core,
+                org.jboss.osgi.framework,
+                deployment.osgi-simple-service-api:0.0.2,
+                deployment.org.eclipse.gemini.blueprint.core:1.0.2.RELEASE
+                </Dependencies>
+                <!-- deployment.org.apache.aries.blueprint.annotation.api:1.0.0 -->
+              </manifestEntries>
+            </archive>
+            </configuration>
+         </plugin>
+         <!-- JBoss AS plugin to deploy war -->
+         <plugin>
+            <groupId>org.jboss.as.plugins</groupId>
+            <artifactId>jboss-as-maven-plugin</artifactId>
+         </plugin>
+         <!-- Compiler plugin enforces Java 1.6 compatibility and activates
+            annotation processors -->
+         <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+         </plugin>
+      </plugins>
+   </build>
+
+</project>
