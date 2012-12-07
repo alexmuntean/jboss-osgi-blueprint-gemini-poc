@@ -38,6 +38,7 @@
                 <instructions>
                   <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
                   <Bundle-Version>${version.bundle}</Bundle-Version>
+                  <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                   <Export-Package>
                     fi.eis.applications.jboss.poc.osgiservice.api;version=${version.bundle}
                   </Export-Package>

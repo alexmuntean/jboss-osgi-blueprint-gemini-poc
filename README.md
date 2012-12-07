@@ -10,10 +10,13 @@ To install Gemini Blueprint to JBoss, you'll need
 - get [spring-aop](http://ebr.springsource.com/repository/app/bundle/version/detail?name=org.springframework.aop&version=3.1.3.RELEASE)
 - get [spring-beans](http://ebr.springsource.com/repository/app/bundle/version/detail?name=org.springframework.beans&version=3.1.3.RELEASE)
 - get [spring-context](http://ebr.springsource.com/repository/app/bundle/version/detail?name=org.springframework.context&version=3.1.3.RELEASE)
+- get [spring-asm](http://ebr.springsource.com/repository/app/bundle/version/detail?name=org.springframework.asm&version=3.1.3.RELEASE&searchType=bundlesBySymbolicName&searchQuery=org.springframework.asm)
+- get [spring-expression](http://ebr.springsource.com/repository/app/bundle/version/detail?name=org.springframework.expression&version=3.1.3.RELEASE&searchType=bundlesBySymbolicName&searchQuery=org.springframework.expression)
 - install the above
 - get the actual [gemini files](http://www.eclipse.org/gemini/blueprint/download/)
 - install gemini-blueprint-io
 - install gemini-blueprint-core
+- install gemini-blueprint-extender
  
 Then you'd be good to go.
 

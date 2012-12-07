@@ -55,6 +55,7 @@
                         <!-- The Bundle SymbolicName is the same as the artifact
                             ID -->
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
 
                         <Import-Package>
                           fi.eis.applications.jboss.poc.osgiservice.api;version="[0.0,1.0)",
