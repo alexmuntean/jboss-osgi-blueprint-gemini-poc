@@ -6,5 +6,16 @@
         class="fi.eis.applications.jboss.poc.wab.AnotherHelloWorldServlet">
         <property name="MessageService" ref="MessageServiceRef"/>
      </bean>
-     <reference id="MessageServiceRef" interface="fi.eis.applications.jboss.poc.osgiservice.api.MessageService"/>
+    <service ref="helloworldservletservice" interface="javax.servlet.Servlet"
+             depends-on="MessageServiceRef">
+    </service>
+     
+     <reference id="MessageServiceRef"
+            interface="fi.eis.applications.jboss.poc.osgiservice.api.MessageService"
+            availability="mandatory"
+            >
+        <reference-listener bind-method="setMessageService" unbind-method="unsetMessageService">
+            <ref component-id="helloworldservletservice"/>
+        </reference-listener>            
+     </reference>
 </blueprint>

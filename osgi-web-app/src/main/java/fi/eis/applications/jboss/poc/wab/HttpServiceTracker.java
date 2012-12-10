@@ -12,20 +12,23 @@ public class HttpServiceTracker extends ServiceTracker {
 	
   public HttpServiceTracker(final BundleContext context) {
     super(context, HttpService.class.getName(), null);
+	log.info("Creating tracker");  
   }
 
   @Override
   public Object addingService(final ServiceReference reference) {
+	log.info("adding Service " + reference);
     HttpService httpService = (HttpService) super.addingService(reference);
     if (httpService == null)
       return null;
 
     try {
-    	log.debug("Registering servlet at /hi_to_osgi");
+      log.info("registering servlet");
+      log.debug("Registering servlet at /hi_to_osgi");
       httpService.registerServlet("/hi_to_osgi",
           new AnotherHelloWorldServlet(), null, null);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Exception registering anotherhelloworldservlet", e);
     }
 
     return httpService;
