@@ -36,9 +36,11 @@
   </properties>
   <modules>
     <module>osgi-simple-service</module>
+    <module>osgi-simple-jndi-service</module>
     <module>osgi-simple-service-api</module>
+    <module>noosgi-web-app</module>
     <module>osgi-web-app</module>
-	<module>petclinic</module>
+    <module>petclinic</module>
   </modules>
 
   <dependencyManagement>
@@ -68,6 +70,12 @@
       <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>org.osgi.compendium</artifactId>
+        <version>${version.org.osgi}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.enterprise</artifactId>
         <version>${version.org.osgi}</version>
         <scope>provided</scope>
       </dependency>

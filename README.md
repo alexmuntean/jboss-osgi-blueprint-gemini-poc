@@ -59,7 +59,7 @@ Scope of these tests would be
     </tr>
     <tr>
         <td>JNDI with OSGi bundle</td>
-        <td>tbd</td>
+        <td>OK</td>
         <td>JBoss 7.1 does not support, needs <a href="http://aries.apache.org/modules/jndiproject.html">Aries JNDI</a> installed</td>
     </tr>
     <tr>
@@ -74,7 +74,7 @@ Scope of these tests would be
     </tr>
     <tr>
         <td>JDBC with OSGi bundle</td>
-        <td>tbd</td>
+        <td>OK</td>
         <td></td>
     </tr>
     <tr>
@@ -84,8 +84,8 @@ Scope of these tests would be
     </tr>
     <tr>
         <td>Petclinic app - bundle communication</td>
-        <td>tbd</td>
-        <td></td>
+        <td>OK</td>
+        <td>Using ServiceTracker, which is not optimal</td>
     </tr>
 </table>
 

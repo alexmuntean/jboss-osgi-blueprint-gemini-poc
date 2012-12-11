@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+      <groupId>fi.eis.applications.jboss.poc.gemini.parent</groupId>
+      <artifactId>parent</artifactId>
+      <version>0.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
+    <artifactId>osgi-simple-gemini-jndi-service</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>bundle</packaging>
+    <name>poc: simple osgi gemini jndi service</name>
+    <description>poc: simple osgi gemini jndi service</description>
+
+    <dependencies>
+        <!-- OSGi -->
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.core</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.compendium</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.enterprise</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <!-- JBoss -->
+        <dependency>
+          <groupId>org.jboss.logging</groupId>
+          <artifactId>jboss-logging</artifactId>
+          <scope>provided</scope>
+        </dependency>        
+        <!--  client API -->
+        <dependency>
+          <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
+          <artifactId>osgi-simple-service-api</artifactId>
+          </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package><![CDATA[
+                                fi.eis.applications.jboss.poc.osgiservice.api;version="[0.0,1.0)",
+                                javax.naming,
+                                javax.sql,
+                                org.jboss.logging,
+                                org.eclipse.gemini.blueprint,
+                                !org.osgi.service.blueprint,                                
+                                org.osgi*
+                        ]]></Import-Package>
+                        <Private-Package><![CDATA[
+                                fi.eis.applications.jboss.poc.osgiservice.gemini.jndi
+                        ]]></Private-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <!-- JBoss AS plugin to deploy war -->
+	        <plugin>
+	           <groupId>org.jboss.as.plugins</groupId>
+	           <artifactId>jboss-as-maven-plugin</artifactId>
+                <configuration>
+                    <filename>${project.build.finalName}.jar</filename>
+                </configuration>
+	        </plugin>            
+        </plugins>
+    </build>
+
+
+</project>
