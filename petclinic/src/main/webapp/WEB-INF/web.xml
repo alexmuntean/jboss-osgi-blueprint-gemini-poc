@@ -128,9 +128,23 @@
 		- Note that this web app has a shared root application context, serving as parent
 		- of all DispatcherServlet contexts.
 	-->
+	<!--
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext</param-value>
+		<param-value>org.springframework.samples.petclinic.util.ServerOsgiBundleXmlWebApplicationContext</param-value>
+	</context-param>	
+	-->
 	<servlet>
 		<servlet-name>petclinic</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--
+		<init-param>
+			<param-name>contextClass</param-name>
+			 <param-value>org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext</param-value> 
+			<param-value>org.springframework.samples.petclinic.util.ServerOsgiBundleXmlWebApplicationContext</param-value>
+		</init-param> 
+		-->
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 

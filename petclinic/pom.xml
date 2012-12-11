@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.samples</groupId>
-	<artifactId>org.springframework.samples.petclinic-gemini</artifactId>
+	<artifactId>org.springframework.samples.petclinic.gemini</artifactId>
 	<name>petclinic-gemini</name>
 	<packaging>war</packaging>
 	<version>1.0.0-SNAPSHOT</version>
@@ -242,12 +242,34 @@
           <artifactId>org.osgi.compendium</artifactId>
           <scope>provided</scope>
         </dependency>
+        <!-- Gemini -->
+        <dependency>
+          <groupId>org.eclipse.gemini</groupId>
+          <artifactId>org.eclipse.gemini.blueprint.core</artifactId>
+          <version>1.0.2.RELEASE</version>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.eclipse.gemini</groupId>
+          <artifactId>org.eclipse.gemini.blueprint.extender</artifactId>
+          <version>1.0.2.RELEASE</version>
+          <scope>provided</scope>
+        </dependency>
       <!-- our client interfaces -->
       <dependency>
         <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
         <artifactId>osgi-simple-service-api</artifactId>
         <scope>provided</scope>
       </dependency>
+      <!-- 
+      <dependency>
+      <groupId>org.eclipse.gemini.blueprint</groupId>
+      <artifactId>gemini-blueprint-core</artifactId>
+      <version>1.0.2-RELEASE</version>
+      <scope>system</scope>
+      <systemPath>C:/APPS/jboss-as-7.1.1.Final.blueprintstuff/custom_osgi_packages/gemini-blueprint-core-1.0.2.RELEASE.jar</systemPath>
+      </dependency>
+       -->
       		
 
 	</dependencies>
@@ -301,7 +323,8 @@
 				<configuration>
 		            <archive>
 		              <manifestEntries>
-		                <Dependencies>org.osgi.core,org.jboss.osgi.framework,deployment.osgi-simple-service-api:0.0.2,org.osgi.service.blueprint
+		                <Dependencies>
+		                org.osgi.core,org.jboss.osgi.framework,deployment.org.eclipse.gemini.blueprint.core:1.0.2.RELEASE,deployment.osgi-simple-service-api:0.0.2
 						</Dependencies>
 		              </manifestEntries>
 		            </archive>

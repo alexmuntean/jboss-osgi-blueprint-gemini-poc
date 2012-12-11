@@ -3,6 +3,10 @@ package org.springframework.samples.petclinic.web;
 
 import java.util.Collection;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.Clinic;
 import org.springframework.samples.petclinic.Owner;
@@ -23,23 +27,38 @@ import fi.eis.applications.jboss.poc.osgiservice.api.MessageService;
  * @author Juergen Hoeller
  * @author Ken Krebs
  * @author Arjen Poutsma
+ * @author eis
  */
 @Controller
 public class FindOwnersForm {
 
 	private final Clinic clinic;
 
-	
-	private MessageService service = null;
+	// not final - cannot be, as services come and go at runtime
+	private MessageService service;
 
-	public void setMessageService(MessageService service) {
-		this.service = service;
-	}
-	
-	
 	@Autowired
 	public FindOwnersForm(Clinic clinic) {
 		this.clinic = clinic;
+		
+		// TODO is this possible with just Blueprint XML configuration?
+		BundleContext bundleContext = FrameworkUtil.getBundle(MessageService.class).getBundleContext();
+		
+		ServiceTracker serviceTracker = new ServiceTracker(bundleContext, MessageService.class.getName(), null){
+	           @Override
+	           public Object addingService(final ServiceReference sref) {
+	             service = (MessageService) super.addingService(sref);
+	             return service;
+	           }
+
+	           @Override
+	           public void removedService(final ServiceReference sref, final Object sinst) {
+	             super.removedService(sref, service);
+	             service = null;
+	           }    	  
+	       };  
+	    serviceTracker.open(); 
+		
 	}
 
 	@InitBinder
