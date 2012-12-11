@@ -261,16 +261,6 @@
         <artifactId>osgi-simple-service-api</artifactId>
         <scope>provided</scope>
       </dependency>
-      <!-- 
-      <dependency>
-      <groupId>org.eclipse.gemini.blueprint</groupId>
-      <artifactId>gemini-blueprint-core</artifactId>
-      <version>1.0.2-RELEASE</version>
-      <scope>system</scope>
-      <systemPath>C:/APPS/jboss-as-7.1.1.Final.blueprintstuff/custom_osgi_packages/gemini-blueprint-core-1.0.2.RELEASE.jar</systemPath>
-      </dependency>
-       -->
-      		
 
 	</dependencies>
 	<repositories>
