@@ -55,13 +55,11 @@
         <artifactId>osgi-simple-service-api</artifactId>
         <scope>provided</scope>
       </dependency>
-	  <!--
       <dependency>
         <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
         <artifactId>ejb-no-osgi</artifactId>
         <scope>provided</scope>
       </dependency>
-	  -->
       <dependency>
         <groupId>javax</groupId>
         <artifactId>javaee-api</artifactId>
@@ -110,9 +108,9 @@
                 <Dependencies>org.osgi.core,
                 org.jboss.osgi.framework,
                 deployment.osgi-simple-service-api:0.0.2,
-                deployment.org.eclipse.gemini.blueprint.core:1.0.2.RELEASE
+                deployment.org.eclipse.gemini.blueprint.core:1.0.2.RELEASE,
+                deployment.ejb-no-osgi-0.0.1-SNAPSHOT.jar
                 </Dependencies>
-                <!-- deployment.org.apache.aries.blueprint.annotation.api:1.0.0 -->
               </manifestEntries>
             </archive>
             </configuration>

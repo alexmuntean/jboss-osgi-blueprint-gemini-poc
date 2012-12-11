@@ -47,8 +47,8 @@ Scope of these tests would be
     </tr>
     <tr>
         <td>ejb - osgibundle communication</td>
-        <td>tbd</td>
-        <td></td>
+        <td>OK</td>
+        <td>Using ServiceTracker, which is not optimal</td>
     </tr>
     <tr>
         <td>wab (OSGi war)</td>
