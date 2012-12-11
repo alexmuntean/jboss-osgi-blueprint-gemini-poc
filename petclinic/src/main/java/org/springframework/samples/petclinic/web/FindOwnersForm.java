@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import fi.eis.applications.jboss.poc.osgiservice.api.MessageService;
+import fi.eis.applications.jboss.poc.compositeservice.gemini.api.InformationService;
 
 /**
  * JavaBean Form controller that is used to search for <code>Owner</code>s by
@@ -35,19 +35,19 @@ public class FindOwnersForm {
 	private final Clinic clinic;
 
 	// not final - cannot be, as services come and go at runtime
-	private MessageService service;
+	private InformationService service;
 
 	@Autowired
 	public FindOwnersForm(Clinic clinic) {
 		this.clinic = clinic;
 		
 		// TODO is this possible with just Blueprint XML configuration?
-		BundleContext bundleContext = FrameworkUtil.getBundle(MessageService.class).getBundleContext();
+		BundleContext bundleContext = FrameworkUtil.getBundle(InformationService.class).getBundleContext();
 		
-		ServiceTracker serviceTracker = new ServiceTracker(bundleContext, MessageService.class.getName(), null){
+		ServiceTracker serviceTracker = new ServiceTracker(bundleContext, InformationService.class.getName(), null){
 	           @Override
 	           public Object addingService(final ServiceReference sref) {
-	             service = (MessageService) super.addingService(sref);
+	             service = (InformationService) super.addingService(sref);
 	             return service;
 	           }
 

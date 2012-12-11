@@ -258,7 +258,7 @@
       <!-- our client interfaces -->
       <dependency>
         <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
-        <artifactId>osgi-simple-service-api</artifactId>
+        <artifactId>osgi-composite-service</artifactId>
         <scope>provided</scope>
       </dependency>
 
@@ -314,7 +314,7 @@
 		            <archive>
 		              <manifestEntries>
 		                <Dependencies>
-		                org.osgi.core,org.jboss.osgi.framework,deployment.org.eclipse.gemini.blueprint.core:1.0.2.RELEASE,deployment.osgi-simple-service-api:0.0.2
+		                org.osgi.core,org.jboss.osgi.framework,deployment.org.eclipse.gemini.blueprint.core:1.0.2.RELEASE,deployment.osgi-composite-service:0.0.1.SNAPSHOT
 						</Dependencies>
 		              </manifestEntries>
 		            </archive>
