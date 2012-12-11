@@ -31,76 +31,84 @@ import org.osgi.util.tracker.ServiceTracker;
 @WebServlet("/HelloWorld")
 public class HelloWorldServlet extends HttpServlet implements Servlet {
 
-  private static Logger log = Logger.getLogger(HelloWorldServlet.class);
+	private static Logger log = Logger.getLogger(HelloWorldServlet.class);
 
-  private MessageService service;
+	private MessageService service;
 
-  @Resource
-  private BundleContext bundleContext;
-  // another way of obtaining bundle context would be to run this on init method:
-  // bundleContext = (BundleContext) config.getServletContext().getAttribute("osgi-bundlecontext");
-  // but that wouldn't that nice as it introduces tight coupling
+	@Resource
+	private BundleContext bundleContext;
 
-  
-  @Override
-  public void init(final ServletConfig config) throws ServletException {
-	  super.init(config);
-      final HttpServlet servlet = this;
-      
-      
-      log.infof("Registering with parameters %s, %s, %s", bundleContext, MessageService.class.getName(), null);
-       
-      // TODO is this possible with just Blueprint XML configuration?
-      // @Autowired for the service does not work
-      ServiceTracker serviceTracker = new ServiceTracker(bundleContext, MessageService.class.getName(), null){
-           @Override
-           public Object addingService(final ServiceReference sref) {
-             log.infof("Adding service: %s to %s", sref, servlet);
-             service = (MessageService) super.addingService(sref);
-             return service;
-           }
+	// another way of obtaining bundle context would be to run this on init
+	// method:
+	// bundleContext = (BundleContext)
+	// config.getServletContext().getAttribute("osgi-bundlecontext");
+	// but that wouldn't that nice as it introduces tight coupling
 
-           @Override
-           public void removedService(final ServiceReference sref, final Object sinst) {
-             super.removedService(sref, service);
-             log.infof("Removing service: %s from %s", sref, servlet);
-             service = null;
-           }    	  
-       };  
-       serviceTracker.open(); 	  
-	  log.info("Initialized");
-  }
- 
-  private static String PAGE_HEADER = "<html><head><title>helloworld</title><body>";
-  private static String PAGE_FOOTER = "</body></html>";
+	@Override
+	public void init(final ServletConfig config) throws ServletException {
+		super.init(config);
+		final HttpServlet servlet = this;
 
-  @Override
-  protected void doGet(final HttpServletRequest req,
-      final HttpServletResponse resp) throws ServletException, IOException {
-    resp.setContentType("text/html");
-    PrintWriter writer = resp.getWriter();
-    writer.println(PAGE_HEADER);
-    writer.println("<h1>" + (service != null ? service.getMessage() : "null") + "</h1>");
-    if (bundleContext == null)
-    {
-	    writer.print("BundleContext null, cannot use BundleContext to list available OSGi Bundles");
-    } else
-    {
-	    writer.print("Using BundleContext looked up in Servlet Context to list available OSGi Bundles:");
-	    listBundlesWith(bundleContext, writer);
-    }
-    writer.println(PAGE_FOOTER);
-    writer.close();
-  }
-  private static void listBundlesWith(BundleContext context, PrintWriter writer) {
+		log.infof("Registering with parameters %s, %s, %s", bundleContext,
+				MessageService.class.getName(), null);
+
+		// TODO is this possible with just Blueprint XML configuration?
+		// @Autowired for the service does not work
+		ServiceTracker serviceTracker = new ServiceTracker(bundleContext,
+				MessageService.class.getName(), null) {
+			@Override
+			public Object addingService(final ServiceReference sref) {
+				log.infof("Adding service: %s to %s", sref, servlet);
+				service = (MessageService) super.addingService(sref);
+				return service;
+			}
+
+			@Override
+			public void removedService(final ServiceReference sref,
+					final Object sinst) {
+				super.removedService(sref, service);
+				log.infof("Removing service: %s from %s", sref, servlet);
+				service = null;
+			}
+		};
+		serviceTracker.open();
+		log.info("Initialized");
+	}
+
+	private static String PAGE_HEADER = "<html><head><title>helloworld</title><body>";
+	private static String PAGE_FOOTER = "</body></html>";
+
+	@Override
+	protected void doGet(final HttpServletRequest req,
+			final HttpServletResponse resp) throws ServletException,
+			IOException {
+		resp.setContentType("text/html");
+		PrintWriter writer = resp.getWriter();
+		writer.println(PAGE_HEADER);
+		writer.println("<h1>"
+				+ (service != null ? service.getMessage() : "null") + "</h1>");
+		if (bundleContext == null) {
+			writer.print("BundleContext null, cannot use BundleContext to list available OSGi Bundles");
+		} else {
+			writer.print("Using BundleContext looked up in Servlet Context to list available OSGi Bundles:");
+			listBundlesWith(bundleContext, writer);
+		}
+		writer.println(PAGE_FOOTER);
+		writer.close();
+	}
+
+	private static void listBundlesWith(BundleContext context,
+			PrintWriter writer) {
 		List<String> bundles = new ArrayList<String>();
 		for (Bundle bundle : context.getBundles()) {
-			bundles.add(bundle.getSymbolicName() + ":" + bundle.getVersion().toString());
+			bundles.add(bundle.getSymbolicName() + ":"
+					+ bundle.getVersion().toString());
 		}
 		Collections.sort(bundles);
 		List<String> services = new ArrayList<String>();
 		try {
-			for (ServiceReference ref : context.getAllServiceReferences(null, null)) {
+			for (ServiceReference ref : context.getAllServiceReferences(null,
+					null)) {
 				services.add(context.getService(ref).toString());
 				context.ungetService(ref);
 			}
@@ -108,21 +116,23 @@ public class HelloWorldServlet extends HttpServlet implements Servlet {
 			throw new IllegalStateException(e);
 		}
 		Collections.sort(services);
-		writer.println("<ul>");
-	    for (String bundleInfo : bundles) {
-	    	writer.print("<li>");
-	        writer.print(bundleInfo);
-	    	writer.println("</li>");
-	    }
-		writer.println("</ul>");
-		writer.println("<ul>");
-	    for (String service : services) {
-	    	writer.print("<li>");
-	        writer.print(service);
-	    	writer.println("</li>");
-	    }
-		writer.println("</ul>");
 		
-  }  
+		
+		writer.println("<ul>");
+		for (String bundleInfo : bundles) {
+			writer.print("<li>");
+			writer.print(bundleInfo);
+			writer.println("</li>");
+		}
+		writer.println("</ul>");
+		writer.println("<ul>");
+		for (String service : services) {
+			writer.print("<li>");
+			writer.print(service);
+			writer.println("</li>");
+		}
+		writer.println("</ul>");
+
+	}
 
 }

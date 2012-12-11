@@ -36,9 +36,14 @@ Scope of these tests would be
         <td></td>
     </tr>
     <tr>
-        <td>war - osgibundle communication</td>
-        <td>tbd</td>
+        <td>OSGi composite bundle</td>
+        <td>OK</td>
         <td></td>
+    </tr>
+    <tr>
+        <td>war - osgibundle communication</td>
+        <td>OK</td>
+        <td>Using ServiceTracker, which is not optimal</td>
     </tr>
     <tr>
         <td>ejb - osgibundle communication</td>
