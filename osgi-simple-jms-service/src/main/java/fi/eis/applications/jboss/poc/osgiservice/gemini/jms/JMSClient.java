@@ -5,7 +5,7 @@ import java.util.Date;
 import org.jboss.logging.Logger;
 import org.osgi.service.jndi.JNDIContextManager;
 
-import fi.eis.applications.jboss.poc.osgiservice.api.ConvertService;
+import fi.eis.applications.jboss.poc.osgiservice.api.JMSMessageSender;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -17,7 +17,7 @@ import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.NamingException;
 
-public class JMSClient implements ConvertService {
+public class JMSClient implements JMSMessageSender {
     private static final Logger log = Logger.getLogger(JMSClient.class.getName());
 
     private JNDIContextManager jndiContextManager;
@@ -39,7 +39,7 @@ public class JMSClient implements ConvertService {
     private static final String DEFAULT_PASSWORD = "guestpass";
 
 	@Override
-	public String convertMessage(String messageToConvert) {
+	public String sendMessage(String message) {
         ConnectionFactory connectionFactory = null;
         Connection queueConnection = null;
         Connection topicConnection = null;
@@ -55,10 +55,10 @@ public class JMSClient implements ConvertService {
             connectionFactory = (ConnectionFactory) context.lookup(connectionFactoryString);
             log.info("Found connection factory \"" + connectionFactoryString + "\" in JNDI");
 
-            queueConnection = sendMessageToQueue(messageToConvert,
+            queueConnection = sendMessageToQueue(message,
 					connectionFactory, context);
             
-            topicConnection = sendMessageToTopic(messageToConvert,
+            topicConnection = sendMessageToTopic(message,
 					connectionFactory, context);
 
             return "Sent!";

@@ -10,11 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fi.eis.applications.jboss.poc.gemini</groupId>
-    <artifactId>osgi-simple-gemini-jndi-service</artifactId>
+    <artifactId>osgi-simple-gemini-jdbc-service</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>poc: simple osgi gemini jndi service</name>
-    <description>poc: simple osgi gemini jndi service</description>
+    <name>poc: simple osgi gemini jdbc service</name>
+    <description>poc: simple osgi gemini jdbc service</description>
 
     <dependencies>
         <!-- OSGi -->

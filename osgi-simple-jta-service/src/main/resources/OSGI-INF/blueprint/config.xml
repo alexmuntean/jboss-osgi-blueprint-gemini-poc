@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd"
+           >
+    <bean id="simplejtaservice" class="fi.eis.applications.jboss.poc.osgiservice.gemini.jta.JTAService"/>
+
+    <service ref="simplejtaservice" interface="fi.eis.applications.jboss.poc.osgiservice.api.ConvertService"
+             depends-on="jdbcService jmsService userTransaction transactionManager">
+    </service>
+
+    <reference id="transactionManager" interface="javax.transaction.TransactionManager"
+        availability="mandatory">
+        <reference-listener bind-method="bindTransactionManager" unbind-method="unbindTransactionManager">
+            <ref component-id="simplejtaservice"/>
+        </reference-listener>
+    </reference>
+    <reference id="userTransaction" interface="javax.transaction.UserTransaction"
+        availability="mandatory">
+        <reference-listener bind-method="bindUserTransactionService" unbind-method="unbindUserTransactionService">
+            <ref component-id="simplejtaservice"/>
+        </reference-listener>
+    </reference>
+    <reference id="jdbcService" interface="fi.eis.applications.jboss.poc.osgiservice.api.MessageDBStore"
+        availability="mandatory">
+        <reference-listener bind-method="bindJDBCService" unbind-method="unbindJDBCService">
+            <ref component-id="simplejtaservice"/>
+        </reference-listener>
+    </reference>
+    <reference id="jmsService" interface="fi.eis.applications.jboss.poc.osgiservice.api.JMSMessageSender"
+        availability="mandatory">
+        <reference-listener bind-method="bindJMSService" unbind-method="unbindJMSService">
+            <ref component-id="simplejtaservice"/>
+        </reference-listener>
+    </reference>
+</blueprint>

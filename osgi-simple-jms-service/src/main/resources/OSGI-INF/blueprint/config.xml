@@ -2,7 +2,7 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
     <bean id="simplejmsservice" class="fi.eis.applications.jboss.poc.osgiservice.gemini.jms.JMSClient"/>
 
-    <service ref="simplejmsservice" interface="fi.eis.applications.jboss.poc.osgiservice.api.ConvertService"
+    <service ref="simplejmsservice" interface="fi.eis.applications.jboss.poc.osgiservice.api.JMSMessageSender"
              depends-on="jndiService">
     </service>
 

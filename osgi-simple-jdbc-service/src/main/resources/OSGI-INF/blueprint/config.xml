@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
-    <bean id="simplejndiservice" class="fi.eis.applications.jboss.poc.osgiservice.gemini.jndi.SimpleJNDIServiceBean"/>
+    <bean id="simplejdbcservice" class="fi.eis.applications.jboss.poc.osgiservice.gemini.jdbc.SimpleJDBCServiceBean"/>
 
-    <service ref="simplejndiservice" interface="fi.eis.applications.jboss.poc.osgiservice.api.MessageService"
+    <service ref="simplejdbcservice" interface="fi.eis.applications.jboss.poc.osgiservice.api.MessageService"
+             depends-on="jndiService">
+    </service>
+    <service ref="simplejdbcservice" interface="fi.eis.applications.jboss.poc.osgiservice.api.MessageDBStore"
              depends-on="jndiService">
     </service>
 
     <reference id="jndiService" interface="org.osgi.service.jndi.JNDIContextManager"
         availability="mandatory">
         <reference-listener bind-method="bindJNDIService" unbind-method="unbindJNDIService">
-            <ref component-id="simplejndiservice"/>
+            <ref component-id="simplejdbcservice"/>
         </reference-listener>
     </reference>
 

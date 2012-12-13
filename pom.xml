@@ -37,8 +37,9 @@
   <modules>
     <module>osgi-composite-service</module>
     <module>osgi-simple-service</module>
-    <module>osgi-simple-jndi-service</module>
+    <module>osgi-simple-jdbc-service</module>
 	<module>osgi-simple-jms-service</module>
+	<module>osgi-simple-jta-service</module>
     <module>osgi-simple-service-api</module>
     <module>noosgi-web-app</module>
 	<module>noosgi-ejb</module>
