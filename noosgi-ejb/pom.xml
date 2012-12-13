@@ -54,7 +54,12 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Dependencies>org.osgi.core,org.jboss.osgi.framework,deployment.osgi-composite-service:0.0.1.SNAPSHOT</Dependencies>
+              <Dependencies>
+              org.osgi.core,
+              org.jboss.osgi.framework,
+              deployment.osgi-composite-service:0.0.1.SNAPSHOT,
+              deployment.org.eclipse.gemini.blueprint.core:1.0.2.RELEASE
+              </Dependencies>
             </manifestEntries>
           </archive>
         </configuration>

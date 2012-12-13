@@ -12,8 +12,17 @@ These need to be added:
     <socket-binding name="messaging" port="5445"/>
 
     <socket-binding name="messaging-throughput" port="5455"/>
-
 3)
+            <mdb>
+                <resource-adapter-ref resource-adapter-name="hornetq-ra"/>
+                <bean-instance-pool-ref pool-name="mdb-strict-max-pool"/>
+            </mdb>
+
+in
+
+        <subsystem xmlns="urn:jboss:domain:ejb3:1.2">
+	
+4)
 
         <subsystem xmlns="urn:jboss:domain:messaging:1.1">
             <hornetq-server>
