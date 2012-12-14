@@ -16,6 +16,8 @@ import fi.eis.applications.jboss.poc.osgiservice.api.JMSMessageSender;
 import fi.eis.applications.jboss.poc.osgiservice.api.MessageDBStore;
 
 public class XAJTAService implements ConvertService {
+	private static final String FAIL_MESSAGE = "fail";
+	
 	private MessageDBStore dbStore;
 	private JMSMessageSender jmsSender;
 	private UserTransaction userTransactionService;
@@ -74,15 +76,21 @@ public class XAJTAService implements ConvertService {
 
 			String ourMessage = message + "XA! - pls donate $1.000.000";
 			txObj.setMessage(ourMessage);
-			log.debug("message before commit=" + txObj.getMessage());
+			log.info("message before commit=" + txObj.getMessage());
 			
 			// no need for explicit xa datasource here, JBoss does that:
 			// http://www.coderanch.com/t/463211/JBoss/org-jboss-resource-adapter-jdbc
 			dbStore.persistMessage(ourMessage);
 			jmsSender.sendMessage(ourMessage);
 			
-			userTransactionService.commit();
-			log.debug("message after commit=" + txObj.getMessage());
+			if (FAIL_MESSAGE.equals(message)) {
+				log.info("fail message detected, rolling back");
+				userTransactionService.rollback();				
+				log.info("rolled back, message=" + txObj.getMessage());
+			} else {
+				userTransactionService.commit();
+				log.info("message after commit=" + txObj.getMessage());
+			}
 			
 		} catch (SecurityException e) {
 			rollBack(userTransactionService);
