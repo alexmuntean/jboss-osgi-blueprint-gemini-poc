@@ -56,7 +56,7 @@ public class ConvertServlet extends HttpServlet {
   protected void doGet(final HttpServletRequest req,
       final HttpServletResponse resp) throws ServletException, IOException {
 	  String newMessage = service.convertMessage(req.getParameter("message"));
-	  resp.getWriter().write(newMessage);
+	  resp.getWriter().write((newMessage != null) ? newMessage : "null");
   }
 
 }
