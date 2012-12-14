@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
-import javax.sql.XAConnection;
 
 import org.jboss.logging.Logger;
 import org.osgi.service.jndi.JNDIContextManager;
@@ -239,15 +238,5 @@ public abstract class AbstractJDBCServiceBean implements MessageService, Message
 		}
 	}
 	
-	@Override
-	public Long persistMessageXA(XAConnection xa, String message) {
-		Connection conn = null;
-		try {
-			conn = xa.getConnection();
-		} catch (SQLException e) {
-			throw new IllegalStateException("Couldn't get a connection from XA resource", e);
-		}
-		return addMessage(conn, message);
-	}
 
 }

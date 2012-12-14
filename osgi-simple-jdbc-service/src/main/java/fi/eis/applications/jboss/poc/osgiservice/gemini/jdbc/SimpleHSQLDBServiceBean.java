@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import javax.sql.XAConnection;
 
 import org.jboss.logging.Logger;
 
@@ -59,23 +58,6 @@ public class SimpleHSQLDBServiceBean extends AbstractJDBCServiceBean
 		}
 	}
 	
-	@Override
-	public XAConnection getXAConnection() {
-		throw new IllegalStateException("HSQLDB does not support XA, see https://community.jboss.org/thread/174982");
-	}
-
-	@Override
-	public Long persistMessageXA(XAConnection xa, String message) {
-		Connection conn = null;
-		try {
-			conn = xa.getConnection();
-		} catch (SQLException e) {
-			throw new IllegalStateException("Couldn't get a connection from XA resource", e);
-		}
-		return addMessage(conn, message);
-	}
-
-
 	@Override
 	protected String getCreateMessageTableSQL() {
 		final String CREATE_TABLE = "CREATE TABLE message_data(id INT PRIMARY KEY, name VARCHAR)";
