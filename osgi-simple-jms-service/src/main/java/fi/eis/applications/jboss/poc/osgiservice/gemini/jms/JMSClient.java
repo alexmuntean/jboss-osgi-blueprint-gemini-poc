@@ -32,7 +32,10 @@ public class JMSClient implements JMSMessageSender {
         log.info("jndiContextManager is unlinked");
     }    
     // Set up all the default values
-    private static final String DEFAULT_CONNECTION_FACTORY = "RemoteConnectionFactory";
+    @SuppressWarnings("unused")
+	private static final String DEFAULT_CONNECTION_FACTORY = "RemoteConnectionFactory";
+    private static final String XA_CONNECTION_FACTORY = "java:/JmsXA";
+    
     private static final String DEFAULT_DESTINATION_QUEUE = "queue/test";
     private static final String DEFAULT_DESTINATION_TOPIC = "topic/test";
     private static final String DEFAULT_USERNAME = "myguest";
@@ -50,7 +53,7 @@ public class JMSClient implements JMSMessageSender {
             context = jndiContextManager.newInitialContext();
 
             // Perform the JNDI lookups
-            String connectionFactoryString = System.getProperty("connection.factory", DEFAULT_CONNECTION_FACTORY);
+            String connectionFactoryString = System.getProperty("connection.factory", XA_CONNECTION_FACTORY);
             log.info("Attempting to acquire connection factory \"" + connectionFactoryString + "\"");
             connectionFactory = (ConnectionFactory) context.lookup(connectionFactoryString);
             log.info("Found connection factory \"" + connectionFactoryString + "\" in JNDI");
