@@ -72,13 +72,14 @@ public class XAJTAService implements ConvertService {
 			
 			tx.registerSynchronization(txObj);
 
-			String ourMsg = message + "XA! - pls donate $1.000.000";
-			txObj.setMessage(ourMsg);
+			String ourMessage = message + "XA! - pls donate $1.000.000";
+			txObj.setMessage(ourMessage);
 			log.debug("message before commit=" + txObj.getMessage());
 			
 			// no need for explicit xa datasource here, JBoss does that:
 			// http://www.coderanch.com/t/463211/JBoss/org-jboss-resource-adapter-jdbc
-			dbStore.persistMessage(ourMsg);
+			dbStore.persistMessage(ourMessage);
+			jmsSender.sendMessage(ourMessage);
 			
 			userTransactionService.commit();
 			log.debug("message after commit=" + txObj.getMessage());
