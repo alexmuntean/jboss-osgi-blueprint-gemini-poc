@@ -23,11 +23,6 @@
             <artifactId>org.osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
-      <dependency>
-        <groupId>javax.transaction</groupId>
-        <artifactId>jta</artifactId>
-        <scope>provided</scope>
-      </dependency>
     </dependencies>
 
     <build>
@@ -48,8 +43,7 @@
                     fi.eis.applications.jboss.poc.osgiservice.api;version=${version.bundle}
                   </Export-Package>
                   <Import-Package>
-                    org.osgi.framework;version="[1.5,2.0)",
-                    javax.sql
+                    org.osgi.framework;version="[1.5,2.0)"
                   </Import-Package>
                  </instructions>
                 </configuration>
