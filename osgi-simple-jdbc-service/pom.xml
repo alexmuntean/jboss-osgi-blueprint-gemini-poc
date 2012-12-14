@@ -64,7 +64,7 @@
                                 org.osgi*
                         ]]></Import-Package>
                         <Private-Package><![CDATA[
-                                fi.eis.applications.jboss.poc.osgiservice.gemini.jndi
+                                fi.eis.applications.jboss.poc.osgiservice.gemini.jdbc
                         ]]></Private-Package>
                     </instructions>
                 </configuration>

@@ -74,7 +74,7 @@ Scope of these tests would be
     </tr>
     <tr>
         <td>JTA with OSGi bundle</td>
-        <td>tbd</td>
+        <td>OK</td>
         <td></td>
     </tr>
     <tr>

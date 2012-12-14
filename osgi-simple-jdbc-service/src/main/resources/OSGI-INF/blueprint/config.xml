@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
-    <bean id="simplejdbcservice" class="fi.eis.applications.jboss.poc.osgiservice.gemini.jdbc.SimpleJDBCServiceBean"/>
-
+    <!--  
+    <bean id="simplejdbcservice" class="fi.eis.applications.jboss.poc.osgiservice.gemini.jdbc.SimpleHSQLDBServiceBean"/>
+-->
+    <bean id="simplejdbcservice" class="fi.eis.applications.jboss.poc.osgiservice.gemini.jdbc.SimpleMySQLServiceBean"/>
     <service ref="simplejdbcservice" interface="fi.eis.applications.jboss.poc.osgiservice.api.MessageService"
              depends-on="jndiService">
     </service>

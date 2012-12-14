@@ -38,3 +38,14 @@ This would be done by
 set JAVA_OPTS=%JAVA_OPTS% -Dhttps.proxyHost=YOUR_PROXY_HOST -Dhttps.proxyPort=YOUR_PROXY_PORT -Dhttp.proxyHost=YOUR_PROXY_HOST -Dhttp.proxyPort=YOUR_PROXY_PORT
 
 in standalone.bat, right before echoing bootstrap environment.
+
+For MySQL/XA tests, see instructions for configuring at https://community.jboss.org/wiki/DataSourceConfigurationInAS7
+
+Note that the defaults don't configure XA. See last comments on the thread (second page) for those.
+
+Basically, what is needed is
+ - install mysql
+ - download mysql connector
+ - install it as a module, adding dependencies to JDBC and transaction api
+ - define the two data sources - note that XA has different properties than non-XA
+ 

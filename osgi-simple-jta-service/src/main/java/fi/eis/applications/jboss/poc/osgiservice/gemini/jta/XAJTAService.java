@@ -15,8 +15,7 @@ import fi.eis.applications.jboss.poc.osgiservice.api.ConvertService;
 import fi.eis.applications.jboss.poc.osgiservice.api.JMSMessageSender;
 import fi.eis.applications.jboss.poc.osgiservice.api.MessageDBStore;
 
-public class JTAService implements ConvertService {
-	
+public class XAJTAService implements ConvertService {
 	private MessageDBStore dbStore;
 	private JMSMessageSender jmsSender;
 	private UserTransaction userTransactionService;
@@ -57,15 +56,11 @@ public class JTAService implements ConvertService {
 		this.userTransactionService = null;
 	}
 	
-	
-	private Logger log = Logger.getLogger(JTAService.class);
+	private Logger log = Logger.getLogger(this.getClass());
 
-	/**
-	 * Example from
-	 * @url https://github.com/jbosgi/jbosgi/blob/master/testsuite/example/src/test/java/org/jboss/test/osgi/example/jta/TransactionTestCase.java
-	 */
 	@Override
 	public String convertMessage(String message) {
+
 		TransactionalMessage txObj = new TransactionalMessage();
 
 		try {
@@ -74,28 +69,54 @@ public class JTAService implements ConvertService {
 			Transaction tx = transactionManager.getTransaction();
 			
 			log.debug("tx=" + tx);
-
+			
 			tx.registerSynchronization(txObj);
 
-			txObj.setMessage(message + " - pls donate $1.000.000");
-			log.debug("message=" + txObj.getMessage());
-
+			String ourMsg = message + "XA! - pls donate $1.000.000";
+			txObj.setMessage(ourMsg);
+			log.debug("message before commit=" + txObj.getMessage());
+			
+			// no need for explicit xa datasource here, JBoss does that:
+			// http://www.coderanch.com/t/463211/JBoss/org-jboss-resource-adapter-jdbc
+			dbStore.persistMessage(ourMsg);
+			
 			userTransactionService.commit();
+			log.debug("message after commit=" + txObj.getMessage());
+			
 		} catch (SecurityException e) {
+			rollBack(userTransactionService);
 			throw new IllegalStateException(e);
 		} catch (HeuristicMixedException e) {
+			rollBack(userTransactionService);
 			throw new IllegalStateException(e);
 		} catch (HeuristicRollbackException e) {
+			rollBack(userTransactionService);
 			throw new IllegalStateException(e);
 		} catch (NotSupportedException e) {
+			rollBack(userTransactionService);
 			throw new IllegalStateException(e);
 		} catch (SystemException e) {
+			rollBack(userTransactionService);
 			throw new IllegalStateException(e);
 		} catch (RollbackException e) {
+			rollBack(userTransactionService);
 			throw new IllegalStateException(e);
 		}
 
 		return txObj.getMessage();
+
 	}
 
+	private void rollBack(UserTransaction userTransaction) {
+		try {
+			userTransaction.rollback();
+		} catch (IllegalStateException e) {
+			throw new IllegalStateException("Exception rolling back", e);
+		} catch (SecurityException e) {
+			throw new IllegalStateException("Exception rolling back", e);
+		} catch (SystemException e) {
+			throw new IllegalStateException("Exception rolling back", e);
+		}
+		
+	}
 }

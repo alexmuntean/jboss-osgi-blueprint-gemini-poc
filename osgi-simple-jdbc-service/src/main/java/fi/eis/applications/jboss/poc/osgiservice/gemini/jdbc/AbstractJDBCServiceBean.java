@@ -6,9 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.naming.Context;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
+import javax.sql.XAConnection;
 
 import org.jboss.logging.Logger;
 import org.osgi.service.jndi.JNDIContextManager;
@@ -16,8 +15,8 @@ import org.osgi.service.jndi.JNDIContextManager;
 import fi.eis.applications.jboss.poc.osgiservice.api.MessageDBStore;
 import fi.eis.applications.jboss.poc.osgiservice.api.MessageService;
 
-public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
-    private JNDIContextManager jndiContextManager;
+public abstract class AbstractJDBCServiceBean implements MessageService, MessageDBStore {
+    protected JNDIContextManager jndiContextManager;
 
     public void bindJNDIService(final JNDIContextManager jndiContextManager) {
         this.jndiContextManager = jndiContextManager;
@@ -28,15 +27,11 @@ public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
         this.jndiContextManager = null;
         log.info("jndiContextManager is unlinked");
     }
+    protected abstract DataSource getDataSource();
+    protected abstract Connection getConnection(final DataSource ds);
 
-    private static Logger log = Logger.getLogger(SimpleJDBCServiceBean.class);
-
-	private static final String JBOSS_DEFAULT_DATA_SOURCE_JNDI_NAME = "java:jboss/datasources/ExampleDS";
-
-	private static final String JBOSS_DEFAULT_DATA_SOURCE_PASS = "sa";
-
-	private static final String JBOSS_DEFAULT_DATA_SOURCE_USER = "sa";
-
+    protected static Logger log = Logger.getLogger(AbstractJDBCServiceBean.class);
+    
 	@Override
 	public Long persistMessage(String message) {
 		DataSource ds = null;
@@ -50,12 +45,15 @@ public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
 			close(conn);
 		}
 	}
+	
+	protected abstract String getCreateMessageTableSQL();
+	protected abstract String getCreateSequenceSQL();
+	protected abstract String getInsertMessageSQL();
 
-	private Long addMessage(Connection conn, String message) {
-		final String CREATE_TABLE = "CREATE TABLE test2(id INT PRIMARY KEY, name VARCHAR)";
-		final String CREATE_SEQUENCE = "CREATE SEQUENCE test2_seq";
-		final String INSERT_DATA = "INSERT INTO test VALUES(NEXT VALUE FOR test2_seq, ?)";
-		final String GET_LAST_INSERT_ID = "SELECT IDENTITY()";
+	protected Long addMessage(Connection conn, String message) {
+		final String CREATE_TABLE = getCreateMessageTableSQL();
+		final String CREATE_SEQUENCE = getCreateSequenceSQL();
+		final String INSERT_DATA = getInsertMessageSQL();
 
 		Statement st = null;
 		PreparedStatement ps = null;
@@ -63,19 +61,21 @@ public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
 		try {
 			st = conn.createStatement();
 			try {
-				st.execute(CREATE_TABLE);
+				if (CREATE_TABLE != null && (CREATE_TABLE.length() > 0))
+					st.execute(CREATE_TABLE);
 			} catch (SQLException ex) {
-				// we don't care if it already exists 
+				log.info("exception creating a table, we don't really care: " + ex.getMessage(), ex);
 			}
 			try {
-				st.execute(CREATE_SEQUENCE);
+				if (CREATE_SEQUENCE != null && (CREATE_SEQUENCE.length() > 0)) 
+					st.execute(CREATE_SEQUENCE);
 			} catch (SQLException ex) {
-				// ditto
+				log.info("exception creating a sequence, we don't really care: " + ex.getMessage());
 			}
-			ps = conn.prepareStatement(INSERT_DATA);
+			ps = conn.prepareStatement(INSERT_DATA, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, message);
 			ps.executeUpdate();
-			rs = st.executeQuery(GET_LAST_INSERT_ID);
+			rs = ps.getGeneratedKeys(); // or SELECT IDENTITY() for HSQLDB
 			if (rs.next()) {
 				return rs.getLong(1);
 			}
@@ -105,7 +105,7 @@ public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
 	
 	private String getMessage(Connection conn, Long id) {
 		final String GET_NAME =
-			"SELECT name FROM test2 WHERE id = ?";
+			"SELECT name FROM message_data WHERE id = ?";
 
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -156,7 +156,7 @@ public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
 	 */
 	private String getResultFrom(final Connection conn, final String searchWord) {
 		final String GET_NAME =
-			"SELECT name FROM test WHERE name LIKE ?";
+			"SELECT name FROM static_test_data WHERE name LIKE ?";
 
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -178,14 +178,18 @@ public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
 	}
 
 	private void addData(final Connection conn) {
-		final String DROP_PREV_TABLE = "DROP TABLE test IF EXISTS";
-		final String CREATE_TABLE = "CREATE TABLE test(id INT PRIMARY KEY, name VARCHAR)";
-		final String INSERT_DATA = "INSERT INTO test VALUES(1, 'Hello_Worrld')";
+		final String DROP_PREV_TABLE = "DROP TABLE static_test_data";
+		final String CREATE_TABLE = "CREATE TABLE static_test_data(id INT PRIMARY KEY, name VARCHAR(255))";
+		final String INSERT_DATA = "INSERT INTO static_test_data VALUES(1, 'Hello_Worrld')";
 
 		Statement st = null;
 		try {
 			st = conn.createStatement();
-			st.execute(DROP_PREV_TABLE);
+			try {
+				st.execute(DROP_PREV_TABLE);
+			} catch (SQLException ex) {
+				// we don't care if it doesn't exist
+			}
 			st.execute(CREATE_TABLE);
 			st.execute(INSERT_DATA);
 		} catch (final SQLException e) {
@@ -234,38 +238,16 @@ public class SimpleJDBCServiceBean implements MessageService, MessageDBStore {
 			}
 		}
 	}
-
-
-	private static Connection getConnection(final DataSource ds) {
+	
+	@Override
+	public Long persistMessageXA(XAConnection xa, String message) {
+		Connection conn = null;
 		try {
-			return ds.getConnection(JBOSS_DEFAULT_DATA_SOURCE_USER, JBOSS_DEFAULT_DATA_SOURCE_PASS);
-		} catch (final SQLException e) {
-			throw new IllegalStateException("Getting a connection failed", e);
+			conn = xa.getConnection();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Couldn't get a connection from XA resource", e);
 		}
-	}
-
-
-	private DataSource getDataSource() {
-
-		log.debug("jndi context manager is " + jndiContextManager);
-
-		// create a context with the default environment setup
-		Context initialContext = null;
-		try {
-			initialContext = jndiContextManager.newInitialContext();
-		} catch (final NamingException e) {
-			throw new IllegalStateException("JNDI lookup failed", e);
-		}
-
-		log.debug("jndi initial context is " + initialContext);
-
-		try {
-			return (DataSource) initialContext
-					.lookup(JBOSS_DEFAULT_DATA_SOURCE_JNDI_NAME);
-		} catch (final NamingException e) {
-			throw new IllegalStateException( "DS lookup failed", e);
-		}
-
+		return addMessage(conn, message);
 	}
 
 }
