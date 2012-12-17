@@ -177,19 +177,13 @@ public abstract class AbstractJDBCServiceBean implements MessageService, Message
 	}
 
 	private void addData(final Connection conn) {
-		final String DROP_PREV_TABLE = "DROP TABLE static_test_data";
-		final String CREATE_TABLE = "CREATE TABLE static_test_data(id INT PRIMARY KEY, name VARCHAR(255))";
-		final String INSERT_DATA = "INSERT INTO static_test_data VALUES(1, 'Hello_Worrld')";
+		//final String DROP_PREV_TABLE = "DROP TABLE static_test_data";
+		//final String CREATE_TABLE = "CREATE TABLE static_test_data(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255))";
+		final String INSERT_DATA = "INSERT INTO static_test_data(name) VALUES('Hello_Worrld')";
 
 		Statement st = null;
 		try {
 			st = conn.createStatement();
-			try {
-				st.execute(DROP_PREV_TABLE);
-			} catch (SQLException ex) {
-				// we don't care if it doesn't exist
-			}
-			st.execute(CREATE_TABLE);
 			st.execute(INSERT_DATA);
 		} catch (final SQLException e) {
 			throw new IllegalStateException(e);
